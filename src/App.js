@@ -1,34 +1,39 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import Section from './components/Section';
 import Statistics from './components/Statistics';
 import FeedbackOptions from './components/FeedbackOptions';
 
+export default function App (){
+    const [good, setGood] = useState(0);
+    const [neutral, setNeutral] = useState(0);
+    const [bad, setBad] = useState(0);
 
-class App extends Component{
-    state = {
-        good: 0,
-        neutral: 0,
-        bad: 0
-    }
+    const handleIncrement = (option) => {
+        switch (option) {
+            case 'good':
+                setGood(prevGood => prevGood + 1);
+                break;
 
-      handleIncrement = option => {
-    this.setState(prevState => ({
-      [option]: prevState[option] + 1,
-    }));
-  };
+            case 'neutral':
+                setNeutral(prevNeutral => prevNeutral + 1);
+                break;
 
-    countTotalFeedbacks = () =>
-        this.state.good + this.state.neutral + this.state.bad;
+            case 'bad':
+                setBad(prevBad => prevBad + 1);
+                break;
+
+            default:
+                console.log('Invalid subscription type');
+        }
+    };
+
+    const countTotalFeedbacks = () =>
+        good + neutral + bad;
     
+    const countPositiveFeedbackPercentage = (countTotalFeedbacks) =>
+        Math.round((good / countTotalFeedbacks) * 100);
 
-    countPositiveFeedbackPercentage = (countTotalFeedbacks) =>
-        Math.round((this.state.good / countTotalFeedbacks) * 100);
-    
-
-    render() {
-         const { good, neutral, bad } = this.state;
-         const { handleIncrement, countTotalFeedbacks, countPositiveFeedbackPercentage } = this;
-        return (
+    return (
             <>
                 <Section title="Please leave feedback">
                     <FeedbackOptions options={['good', 'neutral', 'bad']} onLeaveFeedback={handleIncrement}/>
@@ -43,8 +48,4 @@ class App extends Component{
                 </Section>
             </>
         );
-    }
 };
-
-export default App;
-
